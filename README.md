@@ -120,3 +120,37 @@ Link : http://asq.kr/DxUZf7Fgzmtmdq
 결과만을 봤을 때에는 과적합이 발생했다고 생각이 되었지만, 실제 나의 손글씨로 테스트를 했을 때 꽤 높은 정확도를 보여주고 있다.(IPad를 통해서 테스트함)
 
 <img src="./documents/demo.gif">
+
+
+
+
+#tflite로 변환 방법
+```
+from tensorflow import keras
+
+import tensorflow as tf
+from model import VGG_FeatureExtractor
+
+#model = keras.models.load_model('./best_loss_0.03_model.h5', compile=False)
+model = VGG_FeatureExtractor(2350)
+model.summary()
+
+model.load_weights('./saved_model/best_loss_0.03_model.h5')
+model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
+                loss='sparse_categorical_crossentropy',
+                metrics=['acc'])
+
+
+export_path = './test1'
+model.save(export_path, save_format="tf")
+
+
+saved_model_dir = './test1'
+converter = tf.lite.TFLiteConverter.from_saved_model(saved_model_dir)
+converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS,
+                                       tf.lite.OpsSet.SELECT_TF_OPS]
+tflite_model = converter.convert()
+open('./converted_model.tflite', 'wb').write(tflite_model)
+
+
+```
