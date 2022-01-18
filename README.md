@@ -124,7 +124,7 @@ Link : http://asq.kr/DxUZf7Fgzmtmdq
 
 
 
-#tflite로 변환 방법
+## tflite로 변환 방법
 ```
 from tensorflow import keras
 
@@ -151,6 +151,4 @@ converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS,
                                        tf.lite.OpsSet.SELECT_TF_OPS]
 tflite_model = converter.convert()
 open('./converted_model.tflite', 'wb').write(tflite_model)
-
-
 ```
